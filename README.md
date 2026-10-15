@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pustaka
 
-## Getting Started
+Next.js application for discovering ebooks, with Indonesian UI, email/password accounts, reader profiles, and reading activity. The landing page uses Lenis and Motion; interface icons use Lucide React. Page copy stays focused on the task, with direct headings and necessary labels, feedback, and actions.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```sh
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local`. Generate a private secret and place it in `BETTER_AUTH_SECRET`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set `BETTER_AUTH_URL` to your application origin (`http://localhost:3000` locally), then:
 
-## Learn More
+```sh
+npm run db:setup
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+`db:setup` applies committed Drizzle migrations and idempotently seeds six books, six genres, and their relationships. It never replaces reader accounts or preferences. Without a database URL, the local SQLite database is `.data/pustaka.db`, configurable with `DATABASE_PATH`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Turso
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Set `TURSO_DATABASE_URL` in `.env.local` to use a remote libSQL database instead of the local file. For a single environment setting, include the database token in the URL:
 
-## Deploy on Vercel
+```env
+TURSO_DATABASE_URL="libsql://your-database.turso.io?authToken=your-database-auth-token"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`TURSO_DATABASE_URL` takes precedence over `DATABASE_PATH`. You can alternatively use the bare `libsql://` URL and put the token in `TURSO_AUTH_TOKEN`. The separate token is optional when the URL already includes it or the database allows unauthenticated access. Standard Turso databases require a database token; a bare URL does not grant access. Treat a URL containing a token as a secret. Keep both settings server-only (no `NEXT_PUBLIC_` prefix). Generate a database token through the Turso dashboard or `turso db tokens create your-database`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For an empty Turso database, run `npm run db:setup` once, then `npm run dev`. The migration, seed, admin bootstrap, and Studio commands all use the configured database. Existing local accounts, preferences, and reading entries are not uploaded automatically; transfer the local database separately if you need them. See the [Turso SDK guide](https://docs.turso.tech/sdk/ts/quickstart) and [Drizzle Turso guide](https://orm.drizzle.team/docs/get-started/turso-new).
+
+Every page uses the root navbar with Beranda, Jelajahi buku, Cara kerja, and account actions. Signed-in readers use the circular Profil saya icon to reach their profile through the session/onboarding gate. Secondary buttons use a filled parchment background.
+
+## Account flow
+
+- `/daftar`: full name, unique username, email, phone number, password (8-128 characters), and matching password confirmation. Usernames use 3–30 letters, digits, or underscores and are normalized to lowercase. Registration signs the reader in.
+- `/masuk`: email and password. Better Auth hashes passwords, manages seven-day database sessions, checks request origins, and limits repeated login attempts.
+- `/minat`: authenticated readers select one or more genres from the database. Preferences persist and can be changed later.
+- `/pustakaku`: requires a valid session and completed onboarding; redirects to the reader's `/{username}` profile.
+- `/{username}`: public name, placeholder avatar, username, and reading interests. Activity lists saved reading statuses, stars, reviews, and update dates. History starts private; only the owner sees it until they enable public history.
+- `/profil/edit`: session-protected edits to name, username, genres, and public profile history. Changing the username changes the profile URL; the old URL is no longer assigned to that account. Book-page reviews and ratings remain public independently of profile history.
+- `/buku`: public book discovery with live title/author search, shared genre filters, highest average rating or most ratings sorting, and 24 books per page. Typing and genre/sorting changes update results automatically; Cari also submits the search. Live updates replace the URL and reset pagination; unrated books follow rated books, and ties use rating count then title. All pages use Plus Jakarta Sans.
+- `/buku/[slug]`: public book detail, average star rating, and recent reviews. Signed-in readers can save one editable entry per book: reading status, optional 1-5 star rating, and optional review (up to 2,000 characters).
+- `/admin`: server-protected overview of books, ratings, latest accounts, and reviews. Only database users with the `admin` role can access it.
+
+`db/schema.ts` defines `users`, `accounts`, `sessions`, `verifications`, `rate_limits`, `books`, `genres`, `book_genres`, `user_genres`, and `reading_entries`. Ratings have database checks and one entry per user/book; unrated entries do not affect averages. The shared catalog lives in `lib/catalog-data.ts`; initial genres live in `lib/genre-data.ts`.
+
+## Initial admin
+
+Set `ADMIN_EMAIL` and a strong, unique `ADMIN_PASSWORD` in `.env.local`, then run:
+
+```sh
+npm run db:migrate
+npm run admin:create
+```
+
+Sign in through `/masuk`; admins are directed to `/admin`. Local development has an initial `admin@pustaka.local` account with a randomly generated password stored as `ADMIN_PASSWORD` in the ignored `.env.local`. `ADMIN_NAME`, `ADMIN_USERNAME` (default `admin_pustaka`), and `ADMIN_PHONE` are optional bootstrap settings.
+
+This command creates a new admin, leaves an existing admin unchanged, and refuses to promote an existing reader. It never resets an existing password. Public signup and profile update requests cannot set roles. The admin dashboard currently provides an overview; catalog editing and review moderation are not included.
+
+The profile migration assigns existing readers unique `pembaca_<rowid>` usernames, which they can change in Edit profil. It adds columns in place and preserves existing credentials, sessions, preferences, and reading entries. Profile mutations save all fields and genres atomically; the database's unique index prevents duplicate usernames.
+
+## Development commands
+
+```sh
+npm run db:generate  # Generate migrations after editing the schema; review SQL
+npm run db:migrate   # Apply committed migrations
+npm run db:seed      # Add missing sample books and genres
+npm run db:studio    # Inspect the configured local or Turso database
+npm run admin:create # Create the initial admin from private environment settings
+npm run test:db      # Single-URL remote connection/authentication check with a local protocol stub
+npm run test:auth    # Isolated database auth/security/persistence checks
+npm run test:catalog # Isolated database search/filter/ranking/pagination checks
+node scripts/check-landing.mjs # Landing check against the running local server
+npm run lint
+npm run build
+```
+
+## Deployment
+
+Set `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in your hosting provider's private environment settings to use Turso. A remote database does not need a persistent local database volume. If using the local SQLite fallback, run on a Node.js host with a persistent writable volume, keep `DATABASE_PATH` on that volume, and back it up; an ephemeral serverless filesystem will not preserve local accounts. Set a unique production secret and the HTTPS application origin; run migrations and seed before starting the app with `npm start`. Never migrate or seed during a web request. Do not commit `.env.local` or database files.
+
+OTP, email/phone verification, password recovery, and payments are outside this implementation. Complete sample editions open in English on Project Gutenberg.

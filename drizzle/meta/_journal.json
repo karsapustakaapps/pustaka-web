@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792037358257,
+      "tag": "0000_tiny_shatterstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792037425273,
+      "tag": "0001_nappy_mauler",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792038328373,
+      "tag": "0002_brief_captain_midlands",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792040963553,
+      "tag": "0003_careful_ozymandias",
+      "breakpoints": true
+    }
+  ]
+}
