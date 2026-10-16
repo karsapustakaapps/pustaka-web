@@ -8,7 +8,7 @@ import { requireAdmin } from "@/lib/session";
 import { readingStatusLabels } from "@/lib/reading-options";
 import { Stars } from "@/app/components/stars";
 import { LogoutButton } from "../pustakaku/logout-button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Pencil, Plus } from "lucide-react";
 
 export const metadata: Metadata = { title: "Admin — Pustaka" };
 export default function AdminPage() {
@@ -31,8 +31,9 @@ async function AdminContent() {
     <div className="admin-metrics">
       {[ ["Buku", catalog.length], ["Pembaca", readerCount], ["Catatan baca", activity.entries], ["Penilaian", activity.ratings] ].map(([label, value]) => <div key={label} className="admin-metric"><span>{label}</span><strong>{value}</strong></div>)}
     </div>
-    <section className="admin-section" id="admin-catalog"><h2>Koleksi buku</h2>
-      <div className="table-scroll"><table className="admin-table"><caption className="sr-only">Koleksi buku dan rata-rata penilaian</caption><thead><tr><th scope="col">Judul buku</th><th scope="col">Penulis</th><th scope="col">Rata-rata</th><th scope="col">Penilaian</th></tr></thead><tbody>{catalog.map((book) => <tr key={book.id}><th scope="row"><Link href={`/buku/${book.id}`}>{book.title}<ChevronRight size={16} aria-hidden="true" /></Link></th><td>{book.author}</td><td>{book.average ? `${Number(book.average).toLocaleString("id-ID", { maximumFractionDigits: 1 })} / 5` : "—"}</td><td>{book.ratings}</td></tr>)}</tbody></table></div>
+    <section className="admin-section" id="admin-catalog">
+      <div className="admin-section-heading"><h2>Koleksi buku</h2><Link className="button button-primary" href="/admin/buku/baru"><Plus size={17} aria-hidden="true" />Tambah buku</Link></div>
+      {catalog.length ? <div className="table-scroll"><table className="admin-table"><caption className="sr-only">Koleksi buku dan rata-rata penilaian</caption><thead><tr><th scope="col">Judul buku</th><th scope="col">Penulis</th><th scope="col">Rata-rata</th><th scope="col">Penilaian</th><th scope="col">Aksi</th></tr></thead><tbody>{catalog.map((book) => <tr key={book.id}><th scope="row"><Link href={`/buku/${book.id}`}>{book.title}<ChevronRight size={16} aria-hidden="true" /></Link></th><td>{book.author}</td><td>{book.average ? `${Number(book.average).toLocaleString("id-ID", { maximumFractionDigits: 1 })} / 5` : "—"}</td><td>{book.ratings}</td><td><Link className="button button-secondary admin-edit-book" href={`/admin/buku/${book.id}`} aria-label={`Edit buku ${book.title}`}><Pencil size={15} aria-hidden="true" />Edit</Link></td></tr>)}</tbody></table></div> : <p className="empty-notes">Belum ada buku. Tambahkan buku pertama ke koleksi.</p>}
     </section>
     <section className="admin-section" id="admin-readers"><h2>Akun terbaru</h2>
       <div className="table-scroll"><table className="admin-table"><caption className="sr-only">Akun dan peran pengguna</caption><thead><tr><th scope="col">Nama</th><th scope="col">Email</th><th scope="col">Peran</th></tr></thead><tbody>{readers.map((reader) => <tr key={reader.id}><th scope="row">{reader.name}</th><td>{reader.email}</td><td><span className="role-badge">{reader.role === "admin" ? "Admin" : "Pembaca"}</span></td></tr>)}</tbody></table></div>

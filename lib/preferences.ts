@@ -4,7 +4,7 @@ import { genres, user, userGenres } from "@/db/schema";
 
 export async function validateGenrePreferences(values: FormDataEntryValue[]) {
   const ids = [...new Set(values.filter((value): value is string => typeof value === "string"))];
-  if (!ids.length || ids.length !== values.length || ids.length > 20) return { error: "Pilih setidaknya satu genre yang kamu sukai.", ids: [] };
+  if (!ids.length || ids.length !== values.length || ids.length > 20) return { error: "Pilih 1–20 genre yang tersedia tanpa pilihan berulang.", ids: [] };
   const valid = await db.select({ id: genres.id }).from(genres).where(inArray(genres.id, ids)).all();
   if (valid.length !== ids.length) return { error: "Ada genre yang tidak tersedia. Muat ulang halaman dan pilih kembali.", ids: [] };
   return { error: null, ids };

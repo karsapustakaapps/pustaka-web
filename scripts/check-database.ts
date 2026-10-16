@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const check = process.argv[2];
-if (check !== "auth" && check !== "catalog") throw new Error("Choose auth or catalog.");
+if (check !== "auth" && check !== "catalog" && check !== "books") throw new Error("Choose auth, catalog, or books.");
 const directory = mkdtempSync(join(tmpdir(), `pustaka-${check}-test-`));
 
 try {

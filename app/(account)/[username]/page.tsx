@@ -41,7 +41,7 @@ async function ProfileContent({ params }: { params: Promise<{ username: string }
       <div className="profile-section-heading"><h2 id="profile-activity-heading">Aktivitas</h2><Link className="text-link" href="/buku"><BookOpen size={16} aria-hidden="true" />Jelajahi buku</Link></div>
       {profile.isOwner && !profile.publicHistory && <p className="profile-privacy"><LockKeyhole size={14} aria-hidden="true" />Riwayat hanya terlihat olehmu.</p>}
       {profile.activity === null ? <p className="empty-notes">Riwayat tidak ditampilkan.</p> : profile.activity.length ? <div className="activity-list">{profile.activity.map((entry) => <article className="activity-entry" key={entry.bookId}>
-        <Link className="activity-cover" href={`/buku/${entry.bookId}`} tabIndex={-1} aria-hidden="true"><Image src={entry.cover} alt="" width={72} height={112} sizes="72px" /></Link>
+        <Link className="activity-cover" href={`/buku/${entry.bookId}`} tabIndex={-1} aria-hidden="true"><Image src={entry.cover} unoptimized={!entry.cover.startsWith("/")} alt="" width={72} height={112} sizes="72px" /></Link>
         <div className="activity-copy">
           <div className="activity-title"><h3><Link href={`/buku/${entry.bookId}`}>{entry.title}</Link></h3><time dateTime={entry.updatedAt.toISOString()}>{entry.updatedAt.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" })}</time></div>
           <p className="activity-author">{entry.author}</p>

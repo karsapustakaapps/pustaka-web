@@ -30,7 +30,7 @@ async function BookContent({ params }: { params: Promise<{ slug: string }> }) {
   return <div className="book-page container">
     <Link className="text-link" href="/buku"><ArrowLeft size={16} aria-hidden="true" />Jelajahi buku</Link>
     <section className="book-detail" aria-labelledby="book-title">
-      <Image className="detail-cover" src={book.cover} alt={`Sampul buku ${book.title}`} width={300} height={469} sizes="(max-width:600px) 160px, 260px" />
+      <Image className="detail-cover" src={book.cover} unoptimized={!book.cover.startsWith("/")} alt={`Sampul buku ${book.title}`} width={300} height={469} sizes="(max-width:600px) 160px, 260px" />
       <div className="detail-copy">
         <div className="interest-tags">{tags.map((tag) => <span key={tag.name}>{tag.name}</span>)}</div>
         <h1 id="book-title">{book.title}</h1><p className="detail-author">{book.author}</p>

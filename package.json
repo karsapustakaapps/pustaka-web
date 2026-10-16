@@ -15,6 +15,7 @@
     "test:db": "tsx scripts/check-connection.ts",
     "test:auth": "tsx scripts/check-database.ts auth",
     "test:catalog": "tsx scripts/check-database.ts catalog",
+    "test:books": "tsx scripts/check-database.ts books",
     "admin:create": "tsx scripts/create-admin.ts"
   },
   "dependencies": {

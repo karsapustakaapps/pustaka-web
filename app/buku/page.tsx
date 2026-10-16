@@ -49,7 +49,7 @@ async function CatalogContent({ searchParams }: CatalogProps) {
       <ul className="book-grid catalog-grid" aria-label="Hasil pencarian buku">
         {books.map((book) => <li key={book.id}>
           <Link className="book-card" href={`/buku/${book.id}`}>
-            <span className="book-cover"><Image src={book.cover} alt={`Sampul buku ${book.title}`} width={320} height={500} sizes="(max-width: 600px) 44vw, (max-width: 900px) 28vw, (max-width: 1100px) 21vw, 175px" /><span className="cover-action">Lihat buku<ArrowRight size={16} aria-hidden="true" /></span></span>
+            <span className="book-cover"><Image src={book.cover} unoptimized={!book.cover.startsWith("/")} alt={`Sampul buku ${book.title}`} width={320} height={500} sizes="(max-width: 600px) 44vw, (max-width: 900px) 28vw, (max-width: 1100px) 21vw, 175px" /><span className="cover-action">Lihat buku<ArrowRight size={16} aria-hidden="true" /></span></span>
             <span className="book-title">{book.title}</span>
             <span className="book-author">{book.author}</span>
             <span className={`catalog-rating${book.ratings ? "" : " catalog-unrated"}`}>
