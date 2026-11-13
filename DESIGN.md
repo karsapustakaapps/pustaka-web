@@ -18,7 +18,7 @@ Pustaka is a literary reading room rendered in soft daylight: a warm cream canva
 - Setiap halaman fokus pada tugasnya. Gunakan judul langsung seperti “Masuk”, “Daftar”, “Minat bacaan”, “Pustakaku”, dan “Admin”. Hilangkan slogan, sapaan dekoratif, paragraf yang mengulang judul, keterangan implementasi, serta CTA yang berulang.
 - Semua halaman memakai navbar yang sama. Isi halaman masuk dan daftar hanya menampilkan judul, formulir, dan tautan antarhalaman akun. Petunjuk tambahan hanya dipakai bila diperlukan untuk validasi atau keputusan pengguna; jangan tambahkan footer slogan.
 - Landing page terdiri dari hero, cara kerja, dan footer ringkas. Koleksi, pencarian, filter genre, pengurutan penilaian, dan pagination berada di halaman `/buku`. Jangan tambahkan bagian cerita merek atau CTA penutup yang mengulang isi halaman.
-- Cuplikan pratinjau diterjemahkan ke bahasa Indonesia. Jelaskan bahwa edisi lengkap gratis di Project Gutenberg berbahasa Inggris.
+- Cuplikan pratinjau diterjemahkan ke bahasa Indonesia. Tautan buku dapat menuju toko, penerbit, atau situs bacaan; gunakan label netral “Lihat buku” tanpa menjanjikan akses gratis atau bahasa edisi tertentu.
 
 ## Ikon antarmuka
 

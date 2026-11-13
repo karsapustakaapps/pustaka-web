@@ -66,7 +66,9 @@ export const books = sqliteTable("books", {
   author: text("author").notNull(),
   cover: text("cover").notNull(),
   description: text("description").notNull(),
-  gutenbergId: integer("gutenberg_id").notNull().unique(),
+  // The default lets SQLite add this column without rebuilding books and cascading reader data.
+  // Application writes always supply a validated URL.
+  bookUrl: text("book_url").notNull().default(""),
 });
 
 export const genres = sqliteTable("genres", {

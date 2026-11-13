@@ -21,6 +21,7 @@ async function main() {
     INSERT INTO sessions (id, token, user_id, expires_at, created_at, updated_at) VALUES ('legacy-session', 'unchanged-token', 'legacy', 9999999999999, 0, 0);
     INSERT INTO genres VALUES ('legacy-genre', 'Genre lama', 'Lama');
     INSERT INTO books VALUES ('legacy-book', 'Buku lama', 'Penulis', '/test.jpg', 'Lama', 99);
+    INSERT INTO book_genres VALUES ('legacy-book', 'legacy-genre');
     INSERT INTO user_genres VALUES ('legacy', 'legacy-genre');
     INSERT INTO reading_entries VALUES ('legacy', 'legacy-book', 'read', 4, 'Ulasan lama', 0, 0);
   `);
@@ -33,6 +34,9 @@ async function main() {
     assert.equal((await db.select().from(session).get())?.token, "unchanged-token");
     assert.equal((await db.select().from(userGenres).all()).length, 1);
     assert.equal((await db.select().from(readingEntries).get())?.comment, "Ulasan lama", "Upgrade preserves linked account data");
+    assert.equal((await db.select().from(books).get())?.bookUrl, "https://www.gutenberg.org/ebooks/99", "Upgrade converts existing IDs to complete book links");
+    assert.deepEqual(await db.select().from(bookGenres).all(), [{ bookId: "legacy-book", genreId: "legacy-genre" }], "Upgrade preserves book genres");
+    assert.ok(!(await sqlite.execute("PRAGMA table_info(books)")).rows.some((column) => column.name === "gutenberg_id"), "Upgrade removes the old ID column");
     assert.deepEqual((await sqlite.execute("PRAGMA foreign_key_check")).rows, []);
     await db.delete(user).run();
     await db.delete(genres).run();
@@ -89,7 +93,7 @@ async function main() {
       { id: "romansa", name: "Romansa", description: "Cinta" },
       { id: "klasik", name: "Klasik", description: "Klasik" },
     ]).run();
-    await db.insert(books).values({ id: "book", title: "Test", author: "Test", cover: "/test.jpg", description: "Test", gutenbergId: 1 }).run();
+    await db.insert(books).values({ id: "book", title: "Test", author: "Test", cover: "/test.jpg", description: "Test", bookUrl: "https://example.test/books/1" }).run();
     await db.insert(bookGenres).values({ bookId: "book", genreId: "romansa" }).run();
     assert.ok(await saveGenrePreferences(id, []));
     assert.ok(await saveGenrePreferences(id, ["unknown"]));

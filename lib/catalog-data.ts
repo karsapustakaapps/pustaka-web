@@ -7,7 +7,7 @@ export const initialBooks = [
     author: "Jane Austen",
     category: "Romansa",
     year: "1813",
-    gutenberg: 1342,
+    bookUrl: "https://www.gutenberg.org/ebooks/1342",
     description:
       "Kesan pertama, prasangka, dan cinta yang tidak mengikuti aturan. Kenali Elizabeth Bennet dan Mr. Darcy lewat kisah Jane Austen.",
     excerpt:
@@ -21,7 +21,7 @@ export const initialBooks = [
     author: "F. Scott Fitzgerald",
     category: "Fiksi",
     year: "1925",
-    gutenberg: 64317,
+    bookUrl: "https://www.gutenberg.org/ebooks/64317",
     description:
       "Di balik pesta gemerlap era Jazz, seorang pria mengejar impian yang sulit diraih. Kisah tentang harapan, perubahan diri, dan masa lalu.",
     excerpt:
@@ -35,7 +35,7 @@ export const initialBooks = [
     author: "Louisa May Alcott",
     category: "Fiksi",
     year: "1868",
-    gutenberg: 514,
+    bookUrl: "https://www.gutenberg.org/ebooks/514",
     description:
       "Empat saudari dengan impian yang berbeda. Ikuti keluarga March melewati suka dan duka, ambisi, dan kehangatan rumah.",
     excerpt:
@@ -49,7 +49,7 @@ export const initialBooks = [
     author: "Oscar Wilde",
     category: "Fiksi",
     year: "1890",
-    gutenberg: 174,
+    bookUrl: "https://www.gutenberg.org/ebooks/174",
     description:
       "Sebuah lukisan menyimpan rahasia yang semakin gelap. Oscar Wilde mengajak kita mempertanyakan kecantikan, kesenangan, dan hati nurani.",
     excerpt:
@@ -63,7 +63,7 @@ export const initialBooks = [
     author: "Charlotte Brontë",
     category: "Romansa",
     year: "1847",
-    gutenberg: 1260,
+    bookUrl: "https://www.gutenberg.org/ebooks/1260",
     description:
       "Jane mencari tempat untuk pulang, cinta, dan kebebasan menentukan hidupnya di tengah dunia yang penuh rahasia.",
     excerpt:
@@ -77,7 +77,7 @@ export const initialBooks = [
     author: "Franz Kafka",
     category: "Bacaan singkat",
     year: "1915",
-    gutenberg: 5200,
+    bookUrl: "https://www.gutenberg.org/ebooks/5200",
     description:
       "Suatu pagi, kehidupan Gregor Samsa berubah menjadi sesuatu yang asing. Cerita singkat tentang jati diri, kesendirian, dan hubungan keluarga.",
     excerpt:

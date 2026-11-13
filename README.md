@@ -1,6 +1,6 @@
 # Pustaka
 
-Next.js application for discovering ebooks, with Indonesian UI, email/password accounts, reader profiles, and reading activity. The landing page uses Lenis and Motion; interface icons use Lucide React. Page copy stays focused on the task, with direct headings and necessary labels, feedback, and actions.
+Next.js application for discovering books, with Indonesian UI, email/password accounts, reader profiles, and reading activity. The landing page uses Lenis and Motion; interface icons use Lucide React. Page copy stays focused on the task, with direct headings and necessary labels, feedback, and actions.
 
 ## Local setup
 
@@ -48,9 +48,11 @@ Every page uses the root navbar with Beranda, Jelajahi buku, Cara kerja, and acc
 - `/buku`: public book discovery with live title/author search, shared genre filters, highest average rating or most ratings sorting, and 24 books per page. Typing and genre/sorting changes update results automatically; Cari also submits the search. Live updates replace the URL and reset pagination; unrated books follow rated books, and ties use rating count then title. All pages use Plus Jakarta Sans.
 - `/buku/[slug]`: public book detail, average star rating, and recent reviews. Signed-in readers can save one editable entry per book: reading status, optional 1-5 star rating, and optional review (up to 2,000 characters).
 - `/admin`: server-protected overview of books, ratings, latest accounts, and reviews, with Tambah buku and Edit actions. Only database users with the `admin` role can access it.
-- `/admin/buku/baru` and `/admin/buku/[id]`: create or edit a book's title, author, cover, description, unique positive Project Gutenberg ID, and 1–20 shared genres. Covers use an existing `/books/filename.jpg` asset or an HTTPS image URL; external images load directly in the browser. Edits keep book URLs and reading entries intact. Hapus buku on the edit page requires confirmation and permanently deletes the book and its related reading entries, ratings, and reviews. Every mutation rechecks the current database admin role, saves genre changes atomically, and refreshes the catalog, detail, admin, and profile pages.
+- `/admin/buku/baru` and `/admin/buku/[id]`: create or edit a book's title, author, cover, description, HTTP/HTTPS book link, and 1–20 shared genres. Book links can point to any store, publisher, or reading site and do not have to be unique. Covers use an existing `/books/filename.jpg` asset or an HTTPS image URL; external images load directly in the browser. Edits keep book detail URLs and reading entries intact. Hapus buku on the edit page requires confirmation and permanently deletes the book and its related reading entries, ratings, and reviews. Every mutation rechecks the current database admin role, saves genre changes atomically, and refreshes the catalog, detail, admin, and profile pages.
 
 `db/schema.ts` defines `users`, `accounts`, `sessions`, `verifications`, `rate_limits`, `books`, `genres`, `book_genres`, `user_genres`, and `reading_entries`. Ratings have database checks and one entry per user/book; unrated entries do not affect averages. The catalog is managed through the admin dashboard. Static book examples for the landing page live in `lib/catalog-data.ts`; initial genres live in `lib/genre-data.ts`.
+
+The book-link migration converts existing numeric source IDs into complete URLs in place, preserving book genres, ratings, and reviews. Apply it with `npm run db:migrate` before starting the updated app.
 
 ## Initial admin
 
@@ -88,4 +90,4 @@ npm run build
 
 Set `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in your hosting provider's private environment settings to use Turso. A remote database does not need a persistent local database volume. If using the local SQLite fallback, run on a Node.js host with a persistent writable volume, keep `DATABASE_PATH` on that volume, and back it up; an ephemeral serverless filesystem will not preserve local accounts. Set a unique production secret and the HTTPS application origin; run migrations and seed before starting the app with `npm start`. Never migrate or seed during a web request. Do not commit `.env.local` or database files.
 
-OTP, email/phone verification, password recovery, and payments are outside this implementation. Complete sample editions open in English on Project Gutenberg.
+OTP, email/phone verification, password recovery, and payments are outside this implementation. Book links open external websites; availability, price, and edition language depend on the destination.

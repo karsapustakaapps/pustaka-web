@@ -276,15 +276,15 @@ export default function Home() {
             </div>
             <a
               className="button button-primary"
-              href={`https://www.gutenberg.org/ebooks/${selectedBook.gutenberg}`}
+              href={selectedBook.bookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Baca edisi Inggris di Project Gutenberg (tab baru)"
+              aria-label="Lihat buku (tab baru)"
             >
-              Baca buku <ExternalLink size={17} aria-hidden="true" />
+              Lihat buku <ExternalLink size={17} aria-hidden="true" />
             </a>
             <p className="preview-note">
-              Cuplikan terjemahan. Edisi lengkap berbahasa Inggris di Project Gutenberg.
+              Cuplikan terjemahan.
             </p>
           </div>
         )}

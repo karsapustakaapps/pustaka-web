@@ -20,7 +20,7 @@ export async function saveBookAction(bookId: string | null, _state: { error: str
   try {
     result = await saveBook(admin.id, bookId, {
       title: form.get("title"), author: form.get("author"), cover: form.get("cover"),
-      description: form.get("description"), gutenbergId: form.get("gutenbergId"),
+      description: form.get("description"), bookUrl: form.get("bookUrl"),
     }, form.getAll("genres"));
   } catch (error) {
     console.error("Failed to save book", error);

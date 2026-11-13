@@ -36,8 +36,7 @@ async function BookContent({ params }: { params: Promise<{ slug: string }> }) {
         <h1 id="book-title">{book.title}</h1><p className="detail-author">{book.author}</p>
         <div className="book-rating-summary" aria-label="Penilaian pembaca"><Star size={21} fill="currentColor" aria-hidden="true" /><strong>{rating.average ? Number(rating.average).toLocaleString("id-ID", { maximumFractionDigits: 1 }) : "—"}</strong><span>{rating.count ? `${rating.count} penilaian` : "Belum ada penilaian"}</span></div>
         <p className="detail-description">{book.description}</p>
-        <a className="button button-primary" href={`https://www.gutenberg.org/ebooks/${book.gutenbergId}`} target="_blank" rel="noopener noreferrer" aria-label="Baca buku di Project Gutenberg (bahasa Inggris, tab baru)">Baca buku <ExternalLink size={17} aria-hidden="true" /></a>
-        <p className="field-hint">Edisi Inggris gratis · Project Gutenberg</p>
+        <a className="button button-primary" href={book.bookUrl} target="_blank" rel="noopener noreferrer" aria-label="Lihat buku (tab baru)">Lihat buku <ExternalLink size={17} aria-hidden="true" /></a>
       </div>
     </section>
     <div className="book-community">

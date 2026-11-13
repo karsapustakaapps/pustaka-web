@@ -7,7 +7,7 @@ import { GenreChoices } from "@/app/components/genre-choices";
 import { saveBookAction, deleteBookAction } from "./actions";
 
 export function BookForm({ book, genres, selected = [] }: {
-  book?: { id: string; title: string; author: string; cover: string; description: string; gutenbergId: number };
+  book?: { id: string; title: string; author: string; cover: string; description: string; bookUrl: string };
   genres: { id: string; name: string }[];
   selected?: string[];
 }) {
@@ -23,7 +23,7 @@ export function BookForm({ book, genres, selected = [] }: {
         <div className="form-field"><label htmlFor="book-author">Penulis</label><input id="book-author" name="author" defaultValue={book?.author} maxLength={200} required /></div>
         <div className="form-field"><label htmlFor="book-cover">Alamat sampul</label><input id="book-cover" name="cover" defaultValue={book?.cover} maxLength={2048} aria-describedby="book-cover-hint" required /><p className="field-hint" id="book-cover-hint">URL HTTPS gambar atau alamat sampul yang tersedia, misalnya /books/pride-and-prejudice.jpg.</p></div>
         <div className="form-field"><label htmlFor="book-description">Deskripsi</label><textarea id="book-description" name="description" defaultValue={book?.description} rows={6} maxLength={10000} required /></div>
-        <div className="form-field"><label htmlFor="book-gutenberg">ID Project Gutenberg</label><input id="book-gutenberg" name="gutenbergId" type="number" min={1} max={2147483647} step={1} defaultValue={book?.gutenbergId} aria-describedby="book-gutenberg-hint" required /><p className="field-hint" id="book-gutenberg-hint">Angka pada tautan edisi lengkap, misalnya 1342 untuk gutenberg.org/ebooks/1342.</p></div>
+        <div className="form-field"><label htmlFor="book-url">Tautan buku</label><input id="book-url" name="bookUrl" type="url" defaultValue={book?.bookUrl} maxLength={2048} aria-describedby="book-url-hint" required /><p className="field-hint" id="book-url-hint">Tautan lengkap ke toko, penerbit, atau situs bacaan (HTTP/HTTPS).</p></div>
         <fieldset className="profile-genre-fieldset"><legend>Genre buku</legend><GenreChoices genres={genres} chosen={chosen} onChange={setChosen} />{!genres.length && <p className="empty-notes">Belum ada genre yang tersedia.</p>}</fieldset>
       </fieldset>
       {state.error && <p className="form-error" role="alert">{state.error}</p>}

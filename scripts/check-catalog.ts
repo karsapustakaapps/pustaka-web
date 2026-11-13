@@ -17,7 +17,7 @@ async function main() {
     assert.equal((await getCatalog({})).total, 0, "An empty catalog remains browsable");
     assert.equal((await getCatalog({})).page, 1);
     await db.insert(genres).values([{ id: "fiksi", name: "Fiksi", description: "" }, { id: "klasik", name: "Klasik", description: "" }]).run();
-    await db.insert(books).values(Array.from({ length: 53 }, (_, index) => ({ id: `book-${index}`, title: `Buku ${String(index).padStart(2, "0")}`, author: index === 0 ? "Jane Austen" : "Penulis lain", cover: "/test.jpg", description: "", gutenbergId: index + 1 }))).run();
+    await db.insert(books).values(Array.from({ length: 53 }, (_, index) => ({ id: `book-${index}`, title: `Buku ${String(index).padStart(2, "0")}`, author: index === 0 ? "Jane Austen" : "Penulis lain", cover: "/test.jpg", description: "", bookUrl: `https://example.test/books/${index + 1}` }))).run();
     await db.insert(bookGenres).values([{ bookId: "book-0", genreId: "fiksi" }, { bookId: "book-0", genreId: "klasik" }, { bookId: "book-1", genreId: "fiksi" }]).run();
     const now = new Date();
     await db.insert(user).values(["a", "b", "c"].map((id) => ({ id, name: id, username: `reader_${id}`, email: `${id}@example.test`, phoneNumber: "081234567890", createdAt: now, updatedAt: now }))).run();
